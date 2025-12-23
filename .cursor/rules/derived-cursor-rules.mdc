@@ -1,0 +1,366 @@
+---
+description: AI rules derived by SpecStory from the project AI interaction history
+globs: *
+---
+
+## HEADERS
+
+## TECH STACK
+
+*   Electron: Framework for building cross-platform desktop applications with JavaScript, HTML, and CSS. Used for creating the floating widget wrapper. Version: ^28.0.0 || ^28.3.3
+*   electron-builder: Tool for packaging Electron apps into distributable formats (DMG, etc.). Version: ^24.9.1 || ^24.13.3
+*   React: JavaScript library for building user interfaces. Used for rendering the floating orb in the widget. Version: ^18.2.0
+*   ReactDOM: Provides DOM-specific methods for React. Version: ^18.2.0
+*   Three.js: JavaScript 3D library. Used for rendering the 3D floating orb. Version: ^0.155.0 || ^0.160.0
+*   Babel Standalone: Used for JSX transformation in the browser.
+*   @react-three/drei: React Three Fiber add-on library. Version: 9.88.13 || ^9.122.0
+*   @react-three/fiber: React Three Fiber library. Version: 8.15.11 || ^8.18.0 || ^9.0.0
+*   @vitejs/plugin-react: Vite plugin for React projects. Version: ^4.2.1 || ^4.7.0
+*   Vite: Build tool for modern web development. Version: ^5.0.0
+*   "@react-three/fiber": "^8.18.0",
+*   "@react-three/drei": "^9.122.0",
+*   gsap: Animation sequencing.
+*   stats.js: FPS + performance overlay.
+*   tweakpane: Real-time parameter adjustment.
+*   @react-three/postprocessing: Used for postprocessing effects like bloom. Version: ^3.0.4
+*   terser: JavaScript parser, mangler and compressor toolkit for ES6+
+*   canvas: Used for generating icons programmatically
+*   framer-motion: Used for animations, particularly in React applications. Version: ^11.0.0
+*   sharp: High speed Node.js module to convert large images
+*   @anthropic-ai/sdk: Used to access Anthropic's AI models.
+
+## PROJECT DOCUMENTATION & CONTEXT SYSTEM
+
+*   `FILE-GUIDE.md`: Project file guide.
+*   `README.md`: Project readme file.
+*   `package.json`: Node.js package file containing project metadata, dependencies, and build scripts.
+*   `src/App.jsx`: Main React component for the application.
+*   `src/FloatingOrb.jsx`: React component for the 3D floating orb.
+*   `src/index.jsx`: Entry point for the React application.
+*   `vite.config.js`: Configuration file for the Vite build tool.
+*   `src/AppWithBackground.jsx`: React component for the application with a background.
+*   `src/index-with-background.jsx`: React component for the React application with a background.
+*   `index-with-background.html`: HTML file for the app with a background.
+*   `main-with-background.js`: Electron main file for the app with a background.
+*   `electron-builder-background.config.js`: Electron builder configuration file for the app with a background.
+*   `TRANSPARENT_WIDGET_CHANGES.md`: Summary of changes to the transparent widget concept. (DEPRECATED)
+*   `TRANSPARENT_WIDGET_IMPLEMENTATION_PLAN.md`: Full implementation plan for the transparent widget concept. Version: 3.0.0
+*   `WHY_REACT_THREE_FIBER_IS_BETTER.md`: Document explaining the advantages of React Three Fiber over vanilla Three.js for building transparent widgets.
+*   `TRANSPARENT_WIDGET_IMPLEMENTATION_PLAN.md`: A comprehensive guide to building a transparent floating widget using Electron, React Three Fiber, and Three.js. Version: 3.0.0
+*   `src/actions/`: Directory containing action definitions for the Cursor Halo app.
+*   `src/components/`: Directory containing React components for the Cursor Halo app.
+*   `src/context/`: Directory containing context detection logic for the Cursor Halo app.
+*   `/Users/joeywalter/Desktop/CursorHalo/`: Root directory for the Cursor Halo application.
+*   `/Users/joeywalter/Desktop/CursorHalo/icons/`: Directory containing icons for the Cursor Halo application.
+*   `/Users/joeywalter/Desktop/CursorHalo/icons/halo.svg`: SVG file for the Cursor Halo icon.
+*   `/Users/joeywalter/Desktop/CursorHalo/icons/generate-icons.js`: Node.js script to generate the iconset PNG files from the SVG.
+*   `/Users/joeywalter/Desktop/CursorHalo/icons/halo.iconset/`: Directory containing the iconset PNG files for the Cursor Halo application.
+*   `/Users/joeywalter/Desktop/CursorHalo/icons/halo.icns`: macOS icon file for the Cursor Halo application.
+*   `src/actions/actionRegistry.js`: Defines available actions based on frontmost application, context type, and current selection.
+*   `src/context/contextDetector.js`: Determines the current user context (frontmost application, selected text, etc.).
+*   `CURSOR_HALO_2.0.md`: Product one-pager for Cursor Halo 2.0.
+*   `src/components/ActionChain.jsx`: Visualizes the action chain as a series of connected orbs.
+*   `src/components/SelectionOverlay.jsx`: Implements the screen selection overlay.
+*   `src/components/FlowingBackground.jsx`: Animated gradient background component.
+*   `src/components/GlassPanel.jsx`: Reusable glassy panel component.
+
+## CODING STANDARDS
+
+## WORKFLOW & RELEASE RULES
+
+*   Building macOS DMG packages for distribution.
+*   When building DMGs, if a valid "Developer ID Application" identity or custom non-Apple code signing certificate is not found, the macOS application code signing step will be skipped. Note that this may cause some undefined behavior, such as localized descriptions not being visible. To resolve this, obtain and configure a valid code signing certificate.
+*   DMG creation will use APFS if HFS+ is unavailable (macOS 10.12+).
+*   Ensure all files required for building the application are included in the &#96;files&#96; array within the &#96;build&#96; section of &#96;package.json&#96;. This includes &#96;main.js&#96;, &#96;preload.js&#96;, and &#96;dist/**/*&#96;.
+*   When packaging applications, ensure that the application icon is correctly configured in the &#96;package.json&#96; file. If the icon is missing, electron-builder will use the default Electron icon. Specify the icon path in the &#96;mac&#96; section of the &#96;build&#96; configuration (e.g., &#96;"icon": "icon.icns"&#96;). If an application icon is not explicitly set in the &#96;package.json&#96; file, electron-builder will use the default Electron icon. To avoid this, ensure that the &#96;icon&#96; property within the &#96;mac&#96; section of the &#96;build&#96; configuration is correctly set to the path of your application icon file (e.g., &#96;"icon": "icons/halo.icns"&#96;). If no icon is available, the icon property and related build steps may be skipped to allow the build to proceed.
+*   When loading external resources (e.g., Three.js from a CDN), handle potential loading failures gracefully. Provide fallback mechanisms or display informative error messages to the user.
+*   When setting the window position, use &#96;mainWindow.setPosition(x, y);&#96; to explicitly set the window's coordinates. Follow this with &#96;mainWindow.show();&#96; and &#96;mainWindow.focus();&#96; to ensure the window is visible and focused.
+*   When building for development, load the app from the Vite development server using &#96;mainWindow.loadURL('http://localhost:3000');&#96;.
+*   When building for production, load the app from the built files in the &#96;dist&#96; folder using &#96;mainWindow.loadFile('dist/index.html');&#96;.
+*   When creating the floating orb widget, ensure the canvas area is non-draggable by setting &#96;-webkit-app-region: no-drag&#96; to allow for user interaction. All elements should have &#96;WebkitAppRegion: 'drag'&#96; for window movement.
+*   The main file is specified in &#96;package.json&#96; under the &#96;extraMetadata&#96; property, for example &#96;"extraMetadata": { "main": "main-with-background.js" }&#96;.
+*   When building a version of the application with a background, the build command should include a config file, for example: &#96;vite build && electron-builder --mac dmg --config electron-builder-background.config.js&#96;.
+*   Copy the DMG file immediately after it's built to avoid it being cleaned by the next build step. For example: &#96;npm run build:dmg && cp "dist/Floating Orb Widget-1.0.0-arm64.dmg" "../Floating-Orb-Widget-Standalone.dmg"&#96;.
+*   The build command should be: &#96;npm run build:dmg && cp "dist/Floating Orb Widget-1.0.0-arm64.dmg" "../Floating-Orb-Widget-Standalone.dmg" && npm run build:dmg:background && cp "dist/Floating Orb Widget (With Background)-1.0.0-arm64.dmg" "../Floating-Orb-Widget-With-Background.dmg"&#96;.
+*   When creating the standalone widget, the main file in package.json should be &#96;main.js&#96;.
+*   When creating the widget with background, the main file in package.json should be &#96;main-with-background.js&#96;.
+*   The following commands can be used to build and start the application:
+    *   `npm run dev`: Starts the Vite development server.
+    *   `npm start`: Starts the Electron application.
+    *   `npm run build:dmg`: Builds the standalone application DMG.
+    *   `npm run build:dmg:background`: Builds the application DMG with background.
+*   When building DMGs, it's necessary to copy the first DMG to a safe location before building the second to prevent electron-builder from cleaning the dist folder.
+*   When implementing drag-to-rotate functionality, ensure that the code only responds to right-click (button 2) for rotation, and prevent the context menu from appearing.
+*   When creating a build, after building the standalone version, copy it immediately: &#96;npm run build:dmg && cp "dist/Floating Orb Widget-1.0.0-arm64.dmg" "../Floating-Orb-Widget-Standalone.dmg"&#96;.
+*   When a project is setup for both a vanilla JavaScript and React version, the build process should account for both.
+*   When creating a build that supports both standalone (transparent) and background versions the following build commands should be used:
+
+```
+npm run build:dmg && cp "dist/Floating Orb Widget-1.0.0-arm64.dmg" "../Floating-Orb-Widget-Standalone.dmg" && npm run build:dmg:background && cp "dist/Floating Orb Widget (With Background)-1.0.0-arm64.dmg" "../Floating-Orb-Widget-With-Background.dmg"
+```
+
+*   Electron-builder cleans the dist folder. Copy the first DMG to a safe location before building the second:
+
+```
+npm run build:dmg && cp "dist/Floating Orb Widget-1.0.0-arm64.dmg" "../Floating-Orb-Widget-Standalone.dmg" && npm run build:dmg:background && cp "dist/Floating Orb Widget (With Background)-1.0.0-arm64.dmg" "../Floating-Orb-Widget-With-Background.dmg" && echo "=== BOTH DMG FILES (in parent directory) ===" && ls -lh ../Floating-Orb-Widget*.dmg
+```
+
+* When creating a floating widget, ensure that left-click + drag moves the window around screen, and right-click + drag rotates the sphere. Follow these steps:
+    * Set -webkit-app-region: drag on the body/container to enable window dragging.
+    * Set -webkit-app-region: no-drag on the canvas but handle right-click for rotation.
+    * Update the pointer handlers to only respond to right-click (button 2) for rotation.
+* The following CSS should be applied to the body to ensure proper functioning of the frameless widget with drag and rotate:
+
+```css
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: transparent;
+  -webkit-app-region: drag; /* Make window draggable */
+}
+```
+* When implementing combined window movement and sphere rotation with the mouse remember to:
+    *   Stop event propagation: Use e.stopPropagation() in event handlers to prevent conflicts between canvas interaction and window dragging.
+    *   Disable context menu: Prevent the context menu from appearing on right-click to enable smooth rotation.
+*   The following CSS should be applied to the body to ensure proper functioning of the frameless widget:
+
+```css
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: transparent;
+  -webkit-app-region: drag;
+}
+```
+*   When loading the HTML file in &#x60;main.js&#x60; or &#x60;main-with-background.js&#x60;, use &#x60;app.isPackaged&#x60; to load the correct file. For example:
+
+```javascript
+   if (app.isPackaged) {
+     mainWindow.loadFile(path.join(__dirname, 'dist', 'index.html'));
+   } else {
+     mainWindow.loadURL('http://localhost:3000');
+   }
+```
+
+*   When creating a multi-version Electron app, it is necessary to preserve the first DMG by immediately copying it after it is built.
+
+```javascript
+npm run build:dmg && cp "dist/Floating Orb Widget-1.0.0-arm64.dmg" "../Floating-Orb-Widget-Standalone.dmg" && npm run build:dmg:background && cp "dist/Floating Orb Widget (With Background)-1.0.0-arm64.dmg" "../Floating-Orb-Widget-With-Background.dmg" && echo "=== BOTH DMG FILES (in parent directory) ===" && ls -lh ../Floating-Orb-Widget*.dmg
+```
+
+*   When creating a floating widget, if you see the error  &#x20;`TypeError: Cannot read properties of undefined (reading 'length')` it is likely caused by an incompatibility or issue with the postprocessing library. Remove it and simplify the component to debug.
+*   When creating a floating widget, if you see the error  &#x20;`Unable to find Electron app at /Users/joeywalter/Desktop/FloatingOrbUltimate100` it is likely because the &#x20;`main` field in &#x60;package.json&#x60; is not pointing to the correct file. The main field in package.json needs to point to &#x60;main.js&#x60; for Electron, not the vanilla JS bundle.
+* When creating a floating widget, if the orb does not appear, it may be a material or lighting issue. Making it more visible can help:
+
+```javascript
+// Create material with chrome-like appearance
+        // Using a brighter, more visible material
+        const material = new THREE.MeshStandardMaterial({
+         color: 0xffffff,
+         metalness: 0.9,
+         roughness: 0.1,
+         envMapIntensity: 1.0,
+         emissive: 0x222222,
+         emissiveIntensity: 0.2
+```
+
+*   To build both DMGs reliably, use the following command:
+
+```bash
+npm run build:dmg && cp "dist/Floating Orb (Standalone)-1.0.0-arm64.dmg" "../Floating-Orb-Widget-Standalone.dmg" && npm run build:dmg:glass && cp "dist/Floating Orb (Glass)-1.0.0-arm64.dmg" "../Floating-Orb-Glass.dmg"
+```
+
+*   When creating a floating widget, ensure that left-click + drag moves the window around screen, and right-click + drag rotates the sphere. Follow these steps:
+    * Set -webkit-app-region: drag on the body/container to enable window dragging.
+    * Set -webkit-app-region: no-drag on the canvas but handle right-click for rotation.
+    * Update the pointer handlers to only respond to right-click (button 2) for rotation.
+* The following CSS should be applied to the body to ensure proper functioning of the frameless widget with drag and rotate:
+
+```css
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: transparent;
+  -webkit-app-region: drag; /* Make window draggable */
+}
+```
+* When implementing combined window movement and sphere rotation with the mouse remember to:
+    *   Stop event propagation: Use e.stopPropagation() in event handlers to prevent conflicts between canvas interaction and window dragging.
+    *   Disable context menu: Prevent the context menu from appearing on right-click to enable smooth rotation.
+*   The following CSS should be applied to the body to ensure proper functioning of the frameless widget:
+
+```css
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: transparent;
+  -webkit-app-region: drag;
+}
+```
+*   When loading the HTML file in &#x60;main.js&#x60; or &#x60;main-with-background.js&#x60;, use &#x60;app.isPackaged&#x60; to load the correct file. For example:
+
+```javascript
+   if (app.isPackaged) {
+     mainWindow.loadFile(path.join(__dirname, 'dist', 'index.html'));
+   } else {
+     mainWindow.loadURL('http://localhost:3000');
+   }
+```
+
+*   When creating a multi-version Electron app, it is necessary to preserve the first DMG by immediately copying it after it is built.
+
+```javascript
+npm run build:dmg && cp "dist/Floating Orb Widget-1.0.0-arm64.dmg" "../Floating-Orb-Widget-Standalone.dmg" && npm run build:dmg:background && cp "dist/Floating Orb Widget (With Background)-1.0.0-arm64.dmg" "../Floating-Orb-Widget-With-Background.dmg" && echo "=== BOTH DMG FILES (in parent directory) ===" && ls -lh ../Floating-Orb-Widget*.dmg
+```
+
+*   When creating a floating widget, if you see the error  &#x20;`TypeError: Cannot read properties of undefined (reading 'length')` it is likely caused by an incompatibility or issue with the postprocessing library. Remove it and simplify the component to debug.
+*   When creating a floating widget, if you see the error  &#x20;`Unable to find Electron app at /Users/joeywalter/Desktop/FloatingOrbUltimate100` it is likely because the &#x20;`main` field in &#x60;package.json&#x60; is not pointing to the correct file. The main field in package.json needs to point to &#x60;main.js&#x60; for Electron, not the vanilla JS bundle.
+* When creating a floating widget, if the orb does not appear, it may be a material or lighting issue. Making it more visible can help:
+
+```javascript
+// Create material with chrome-like appearance
+        // Using a brighter, more visible material
+        const material = new THREE.MeshStandardMaterial({
+         color: 0xffffff,
+         metalness: 0.9,
+         roughness: 0.1,
+         envMapIntensity: 1.0,
+         emissive: 0x222222,
+         emissiveIntensity: 0.2
+```
+
+*   To build both DMGs reliably, use the following command:
+
+```bash
+npm run build:dmg && cp "dist/Floating Orb (Standalone)-1.0.0-arm64.dmg" "../Floating-Orb-Widget-Standalone.dmg" && npm run build:dmg:glass && cp "dist/Floating Orb (Glass)-1.0.0-arm64.dmg" "../Floating-Orb-Glass.dmg"
+```
+
+*   When creating a floating widget, ensure that left-click + drag moves the window around screen, and right-click + drag rotates the sphere. Follow these steps:
+    * Set -webkit-app-region: drag on the body/container to enable window dragging.
+    * Set -webkit-app-region: no-drag on the canvas but handle right-click for rotation.
+    * Update the pointer handlers to only respond to right-click (button 2) for rotation.
+* The following CSS should be applied to the body to ensure proper functioning of the frameless widget with drag and rotate:
+
+```css
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: transparent;
+  -webkit-app-region: drag; /* Make window draggable */
+}
+```
+* When implementing combined window movement and sphere rotation with the mouse remember to:
+    *   Stop event propagation: Use e.stopPropagation() in event handlers to prevent conflicts between canvas interaction and window dragging.
+    *   Disable context menu: Prevent the context menu from appearing on right-click to enable smooth rotation.
+*   The following CSS should be applied to the body to ensure proper functioning of the frameless widget:
+
+```css
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: transparent;
+  -webkit-app-region: drag;
+}
+```
+*   When loading the HTML file in &#x60;main.js&#x60; or &#x60;main-with-background.js&#x60;, use &#x60;app.isPackaged&#x60; to load the correct file. For example:
+
+```javascript
+   if (app.isPackaged) {
+     mainWindow.loadFile(path.join(__dirname, 'dist', 'index.html'));
+   } else {
+     mainWindow.loadURL('http://localhost:3000');
+   }
+```
+
+*   When creating a multi-version Electron app, it is necessary to preserve the first DMG by immediately copying it after it is built.
+
+```javascript
+npm run build:dmg && cp "dist/Floating Orb Widget-1.0.0-arm64.dmg" "../Floating-Orb-Widget-Standalone.dmg" && npm run build:dmg:background && cp "dist/Floating Orb Widget (With Background)-1.0.0-arm64.dmg" "../Floating-Orb-Widget-With-Background.dmg" && echo "=== BOTH DMG FILES (in parent directory) ===" && ls -lh ../Floating-Orb-Widget*.dmg
+```
+
+*   When creating a floating widget, if you see the error  &#x20;`TypeError: Cannot read properties of undefined (reading 'length')` it is likely caused by an incompatibility or issue with the postprocessing library. Remove it and simplify the component to debug.
+*   When creating a floating widget, if you see the error  &#x20;`Unable to find Electron app at /Users/joeywalter/Desktop/FloatingOrbUltimate100` it is likely because the &#x20;`main` field in &#x60;package.json&#x60; is not pointing to the correct file. The main field in package.json needs to point to &#x60;main.js&#x60; for Electron, not the vanilla JS bundle.
+* When creating a floating widget, if the orb does not appear, it may be a material or lighting issue. Making it more visible can help:
+
+```javascript
+// Create material with chrome-like appearance
+        // Using a brighter, more visible material
+        const material = new THREE.MeshStandardMaterial({
+         color: 0xffffff,
+         metalness: 0.9,
+         roughness: 0.1,
+         envMapIntensity: 1.0,
+         emissive: 0x222222,
+         emissiveIntensity: 0.2
+```
+
+*   To build both DMGs reliably, use the following command:
+
+```bash
+npm run build:dmg && cp "dist/Floating Orb (Standalone)-1.0.0-arm64.dmg" "../Floating-Orb-Widget-Standalone.dmg" && npm run build:dmg:glass && cp "dist/Floating Orb (Glass)-1.0.0-arm64.dmg" "../Floating-Orb-Glass.dmg"
+```
+
+*   When creating a floating widget, to give it its own icon, you must:
+    *   Create an icons directory
+    *   Create an SVG icon
+    *   Create a script to generate the iconset
+    *   Generate the icon files
+    *   Update the package.json to reference the icon
+*   To generate the icon files, you can use a Node.js script with the canvas library
+* The following command can be used to install the canvas package: &#x20;`npm install canvas --save-dev`.
+* The following command can be used to convert the iconset to .icns format: &#x20;
+
+```
+iconutil -c icns icons/halo.iconset -o icons/halo.icns
+```
+
+* To add the application icon to the build, add the following to the `package.json` file, under the `mac` section of the &#x60;build&#x60; configuration:
+
+```json
+"icon": "icons/halo.icns"
+```
+
+*   When running the build commands, make sure you are in the correct directory, which is the root directory of the project. For example:
+
+```bash
+cd ~/Desktop/CursorHalo
+npm run build:dmg
+```
+
+*   When building DMGs, if a valid "Developer ID Application" identity or custom non-Apple code signing certificate is not found, the macOS application code signing step will be skipped. Note that this may cause some undefined behaviour, e.g., macOS localized description not being visible
+*   When creating an NPM package, the following steps are necessary:
+    *   Build vanilla JS distribution files by running &#x60;npm run build:vanilla&#x60; to generate the following files in the dist folder:
+        *   &#x60;dist/floating-orb.esm.js&#x60; - ES Module version
+        *   &#x60;dist/floating-orb.umd.js&#x60; - UMD version (Node/AMD)
+        *   &#x60;dist/floating-orb.min.js&#x60; - IIFE minified for &#x60;<script>&#60; tags
+    *   Create a &#x60;.npmignore&#x60; file to exclude unnecessary files from npm publish. The file should contain the following:
+
+```
+main.js
+main-with-background.js
+preload.js
+electron-builder-*.config.js
+index.html
+index-with-background.html
+icons/
+dist/mac-arm64/
+dist/builder-*.yaml
+dist/*.html
+*.md
+!README.md
+vite.config.js
+vite.config.vanilla.js
+FloatingOrb-ULTIMATE-100.jsx
+```
+
+    *   Update TypeScript definitions in &#x60;src/FloatingOrb.d.ts&#x60; to sync the CONFIG interface to match the actual 4-point lighting implementation. Change from 9 lights (key1, key2, fill1, fill2, rim1, rim2, accent1, accent2) to 4 lights (key, fill, rim, ambient) and update GLOW from 3 layers to 1 layer.
+    *   Update &#x60;package.json&#x60; metadata:
+        *   Update the &#x60;"author"&#x60; field with the correct name.
+        *   Verify the &#x60;"repository"&#x60; URL is correct.
+        *   Ensure &#x60;"main"&#x60; points to the correct Electron entry for local development.

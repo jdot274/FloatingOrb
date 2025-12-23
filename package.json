@@ -1,0 +1,170 @@
+{
+  "name": "floating-orb-component",
+  "version": "1.0.0",
+  "description": "Premium 3D Floating Orb - AAA-Quality Web Component with PBR Materials, 9-Point Lighting, and True Transparency. Works everywhere: React, Vue, Angular, WordPress, vanilla HTML.",
+  "main": "main.js",
+  "browser": "dist/floating-orb.min.js",
+  "module": "dist/floating-orb.esm.js",
+  "types": "src/FloatingOrb.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/floating-orb.esm.js",
+      "require": "./dist/floating-orb.min.js",
+      "types": "./src/FloatingOrb.d.ts"
+    },
+    "./react": {
+      "import": "./react/index.jsx",
+      "types": "./react/index.d.ts"
+    },
+    "./r3f": {
+      "import": "./r3f/index.jsx",
+      "types": "./r3f/index.d.ts"
+    },
+    "./vanilla": {
+      "import": "./src/floating-orb.js",
+      "types": "./src/FloatingOrb.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "react",
+    "r3f",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "electron .",
+    "start:background": "electron . --main=main-with-background.js",
+    "dev": "vite",
+    "build": "vite build && electron-builder --mac",
+    "build:vanilla": "vite build --config vite.config.vanilla.js",
+    "build:all": "npm run build:vanilla && vite build",
+    "build:dmg": "npm run build:all && electron-builder --mac dmg",
+    "build:dmg:glass": "npm run build:all && electron-builder --mac dmg --config electron-builder-background.config.js",
+    "build:both": "npm run build:dmg && npm run build:dmg:glass",
+    "build:npm": "npm run build:vanilla",
+    "prepublishOnly": "npm run build:npm",
+    "preview": "vite preview",
+    "test": "vitest"
+  },
+  "keywords": [
+    "3d",
+    "webgl",
+    "three.js",
+    "threejs",
+    "web-component",
+    "custom-element",
+    "react",
+    "react-three-fiber",
+    "r3f",
+    "orb",
+    "sphere",
+    "pbr",
+    "material",
+    "glass",
+    "chrome",
+    "metallic",
+    "floating",
+    "widget",
+    "transparent",
+    "postprocessing",
+    "bloom",
+    "glow",
+    "animation",
+    "interactive"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "three": "^0.160.1"
+  },
+  "peerDependencies": {
+    "@react-three/drei": "^9.0.0",
+    "@react-three/fiber": "^8.0.0",
+    "@react-three/postprocessing": "^2.0.0 || ^3.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@react-three/drei": {
+      "optional": true
+    },
+    "@react-three/fiber": {
+      "optional": true
+    },
+    "@react-three/postprocessing": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.18.0",
+    "@react-three/postprocessing": "^3.0.4",
+    "@vitejs/plugin-react": "^4.7.0",
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "terser": "^5.44.1",
+    "vite": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "build": {
+    "appId": "com.floatingorb.standalone",
+    "productName": "Floating Orb (Standalone)",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "icon": "icons/standalone.icns",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ]
+    },
+    "dmg": {
+      "title": "Floating Orb Standalone ${version}",
+      "background": null,
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "window": {
+        "width": 540,
+        "height": 380
+      }
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "dist/**/*",
+      "package.json"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/floating-orb-component"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/floating-orb-component/issues"
+  },
+  "homepage": "https://github.com/yourusername/floating-orb-component#readme"
+}
