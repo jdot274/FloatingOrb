@@ -114,7 +114,7 @@
     "react-dom": "^18.2.0",
     "terser": "^5.44.1",
     "vite": "^5.0.0",
-    "vitest": "^1.0.0"
+    "vitest": "^5.0.4"
   },
   "build": {
     "appId": "com.floatingorb.standalone",
